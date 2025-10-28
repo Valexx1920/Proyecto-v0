@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {% load static %}
+
+  <!-- CSS de Leaflet (mapa) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Tu CSS -->
+  <link rel="stylesheet" href="{% static 'PI/css/styles.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Trueque de Ropa</h1>
+    <button id="btn-publicar">Publicar prenda</button>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <!-- JS de Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Tu JS -->
+  <script src="{% static 'PI/js/app.js' %}"></script>
+</body>
+</html>
