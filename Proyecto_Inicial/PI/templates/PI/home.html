@@ -1,7 +1,50 @@
 {% extends 'PI/base.html' %}
+
 {% block content %}
+{% if user.is_authenticated %}
+
+  <p>Bienvenido, {{ user.username }}</p>
+
+  <div style="text-align: right; margin-bottom: 10px;">
+      <!-- Botón Publicar -->
+      <button class="btn">Publicar</button>
+
+      <!-- Botón Cerrar sesión -->
+      <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn">Cerrar sesión</button>
+      </form>
+  </div>
+
   <h2>Funciona ✅</h2>
+
+  <!-- Contenedor del mapa -->
   <div id="map" style="height: 400px;"></div>
   <div id="cards"></div>
+
+  <style>
+    .btn {
+      padding: 8px 16px;
+      margin-left: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+{% else %}
+  <p>Debes iniciar sesión para ver el mapa.</p>
+  <a href="{% url 'inicio_sesion:login' %}">Iniciar sesión</a>
+{% endif %}
 {% endblock %}
+
+
+
+
 
