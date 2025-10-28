@@ -1,0 +1,12 @@
+<h2>Registro</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Usuario" required><br>
+    <input type="password" name="password" placeholder="Contraseña" required><br>
+    <input type="password" name="password2" placeholder="Repetir contraseña" required><br>
+    <button type="submit">Registrarse</button>
+</form>
+<a href="{% url 'login' %}">Iniciar sesión</a>
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}

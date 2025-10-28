@@ -1,0 +1,6 @@
+<h2>Bienvenido {{ user.username }}</h2>
+{% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">Cerrar sesión</a>
+{% else %}
+    <a href="{% url 'login' %}">Iniciar sesión</a>
+{% endif %}
