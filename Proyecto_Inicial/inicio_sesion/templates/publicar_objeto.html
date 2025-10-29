@@ -1,0 +1,12 @@
+{% extends "PI/base.html" %}
+
+{% block content %}
+<h2>Publicar prenda</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-verde">Publicar</button>
+</form>
+
+{% endblock %}

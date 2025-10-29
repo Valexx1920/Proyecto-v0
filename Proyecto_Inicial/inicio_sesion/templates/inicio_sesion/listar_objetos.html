@@ -1,0 +1,98 @@
+{% extends "PI/base.html" %}
+
+{% block content %}
+<h2>Objetos publicados</h2>
+
+{% if objetos %}
+  <div id="lista-objetos">
+    {% for obj in objetos %}
+      <div class="card">
+        <h3>{{ obj.nombre }}</h3>
+        <p>{{ obj.descripcion }}</p>
+        <p><strong>Publicado por:</strong> {{ obj.usuario.username }}</p>
+        <p><strong>Fecha:</strong> {{ obj.fecha_publicacion|date:"d/m/Y H:i" }}</p>
+        {% if obj.latitud and obj.longitud %}
+          <p><strong>Ubicación:</strong> ({{ obj.latitud }}, {{ obj.longitud }})</p>
+        {% endif %}
+
+        {% if obj.usuario == user %}
+          <div class="acciones">
+            <a href="{% url 'inicio_sesion:editar_objeto' obj.id %}" class="btn btn-azul">Editar</a>
+
+            <form action="{% url 'inicio_sesion:eliminar_objeto' obj.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-rojo">Eliminar</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No hay objetos publicados aún.</p>
+{% endif %}
+
+
+<style>
+  .card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  .acciones {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .btn {
+    display: inline-block;
+    text-align: center;
+    width: 110px;
+    padding: 8px 0;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 
+      background 0.2s ease-in-out,
+      transform 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  }
+
+  .btn-azul {
+    background-color: #007BFF;
+  }
+
+  .btn-azul:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-rojo {
+    background-color: #dc3545;
+  }
+
+  .btn-rojo:hover {
+    background-color: #b52a37;
+  }
+</style>
+
+
+{% endblock %}
