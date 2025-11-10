@@ -43,7 +43,7 @@ def login_usuario(request):
             login(request, user)
             return redirect('/home/')
         else:
-            messages.error(request, 'Credenciales incorrectas')
+            messages.error(request, 'Contraseña o usuario incorrecto')
     return render(request, 'login.html')
 
 
