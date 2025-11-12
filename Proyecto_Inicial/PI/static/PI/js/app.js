@@ -9,10 +9,6 @@ if (navigator.geolocation) {
     });
 }
 
-const prendas = [
-  { nombre: 'Polera Negra', talla: 'M' },
-  { nombre: 'Jeans Azul', talla: '38' },
-];
 
 const cards = document.getElementById('cards');
 prendas.forEach(p => {

@@ -3,10 +3,10 @@
 {% block content %}
 <h2>Publicar prenda</h2>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn-verde">Publicar</button>
+    <button type="submit">Publicar</button>
 </form>
 
 {% endblock %}

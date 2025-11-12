@@ -61,15 +61,26 @@ from .forms import ObjetoForm
 @login_required
 def publicar_objeto(request):
     if request.method == "POST":
-        form = ObjetoForm(request.POST)
+       
+        form = ObjetoForm(request.POST, request.FILES) 
+        
         if form.is_valid():
+           
             obj = form.save(commit=False)
+            
+           
             obj.usuario = request.user
+            
+           
             obj.save()
+            
+           
             return redirect('inicio_sesion:listar_objetos')
     else:
+      
         form = ObjetoForm()
     
+   
     return render(request, 'publicar_objeto.html', {'form': form})
 
 from .models import Objeto

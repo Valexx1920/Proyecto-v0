@@ -8,6 +8,7 @@ class Objeto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='objetos/imagenes/', blank=True, null=True)
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
