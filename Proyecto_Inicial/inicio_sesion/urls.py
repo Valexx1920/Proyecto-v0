@@ -13,5 +13,8 @@ urlpatterns = [
     path("objetos/", views.listar_objetos, name="listar_objetos"),
     path("editar/<int:pk>/", views.editar_objeto, name="editar_objeto"),
     path("eliminar/<int:pk>/", views.eliminar_objeto, name="eliminar_objeto"),
+    path('guardar_ubicacion/<int:pk>/', views.guardar_ubicacion, name='guardar_ubicacion'),
+    path('detalle_objeto/<int:pk>/', views.detalle_objeto, name='detalle_objeto'),
+
 ]
     

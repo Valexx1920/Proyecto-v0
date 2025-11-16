@@ -3,6 +3,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .forms import ObjetoForm
+from django.core.serializers import serialize
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from .models import Objeto
 
 def registro(request):
     if request.method == "POST":
@@ -52,34 +59,75 @@ def logout_usuario(request):
     return redirect('inicio_sesion:login')
 
 
+@login_required
 def inicio(request):
-    return render(request, 'inicio.html')
+    # Filtramos solo los objetos que tienen coordenadas
+    objetos = Objeto.objects.exclude(latitud__isnull=True, longitud__isnull=True).values(
+        'id', 'nombre', 'descripcion', 'latitud', 'longitud', 'usuario__username'
+    )
 
-from django.contrib.auth.decorators import login_required
-from .forms import ObjetoForm
+    # Convertimos a lista y renombramos usuario
+    objetos_list = []
+    for obj in objetos:
+        objetos_list.append({
+            'id': obj['id'],
+            'nombre': obj['nombre'],
+            'descripcion': obj['descripcion'],
+            'latitud': float(obj['latitud']),
+            'longitud': float(obj['longitud']),
+            'usuario': obj['usuario__username'],
+        })
+
+    return render(request, 'PI/home.html', {'objetos': objetos_list})
+
 
 @login_required
 def publicar_objeto(request):
     if request.method == "POST":
-        form = ObjetoForm(request.POST)
+        form = ObjetoForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.usuario = request.user
+
+            # Si latitud o longitud son None, asignar valores por defecto
+            if not obj.latitud:
+                obj.latitud = -33.45  # Chile aprox
+            if not obj.longitud:
+                obj.longitud = -70.66
+
             obj.save()
+
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "mapa",
+                {
+                    "type": "enviar_objeto",
+                    "objeto": {
+                        "nombre": obj.nombre,
+                        "descripcion": obj.descripcion,
+                        "latitud": obj.latitud,
+                        "longitud": obj.longitud,
+                        "usuario": obj.usuario.username,
+                        "id": obj.id
+                    }
+                }
+            )
+
             return redirect('inicio_sesion:listar_objetos')
     else:
         form = ObjetoForm()
     
     return render(request, 'publicar_objeto.html', {'form': form})
 
-from .models import Objeto
+
+
 
 @login_required
 def listar_objetos(request):
     objetos = Objeto.objects.all().order_by('-fecha_publicacion')
     return render(request, 'inicio_sesion/listar_objetos.html', {
         'objetos': objetos,
-        "user": request.user                                                                 
+        "user": request.user
     })
 
 @login_required
@@ -102,3 +150,26 @@ def eliminar_objeto(request, pk):
         objeto.delete()
         return redirect('inicio_sesion:listar_objetos')
     return render(request, 'inicio_sesion/confirmar_eliminar.html', {'objeto': objeto})
+
+
+@login_required
+def guardar_ubicacion(request, pk):
+    if request.method == "POST":
+        objeto = get_object_or_404(Objeto, pk=pk, usuario=request.user)
+
+        lat = request.POST.get("lat")
+        lng = request.POST.get("lng")
+
+        if lat and lng:
+            objeto.latitud = lat
+            objeto.longitud = lng
+            objeto.save()
+            return JsonResponse({"status": "ok"})
+
+    return JsonResponse({"status": "error"}, status=400)
+
+
+@login_required
+def detalle_objeto(request, pk):
+    objeto = get_object_or_404(Objeto, pk=pk)
+    return render(request, "inicio_sesion/detalle_objeto.html", {"objeto": objeto})

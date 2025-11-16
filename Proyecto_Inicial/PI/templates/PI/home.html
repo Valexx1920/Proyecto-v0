@@ -3,35 +3,88 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-  <p> Bienvenido, {{ user.username }}</p>
+<p>Bienvenido, {{ user.username }}</p>
 
-  <div style="text-align: right; margin-bottom: 10px;">
-      <!-- Botón Publicar -->
-      <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">Publicar prenda</a>
+<div style="text-align: right; margin-bottom: 10px;">
+    <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">Publicar prenda</a>
+    <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">Ver objetos publicados</a>
 
-      <!-- Botón Ver Objetos -->
-      <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">Ver objetos publicados</a>
-      
-      <!-- Botón Cerrar sesión -->
-      <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn-rojo">Cerrar sesión</button>
-      </form>
-  </div>
+    <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-rojo">Cerrar sesión</button>
+    </form>
+</div>
 
-  <h2>Funciona ✅</h2>
+<!-- Mapa -->
+<div id="map" style="height: 500px; border-radius: 8px;"></div>
 
-  <!-- Contenedor del mapa -->
-  <div id="map" style="height: 400px;"></div>
-  <div id="cards"></div>
+<!-- Panel de info al pasar el mouse -->
+<div id="cards" style="margin-top: 15px;"></div>
+
+<!-- JSON de objetos para JS -->
+{{ objetos|json_script:"objetos-data" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const objetos = JSON.parse(document.getElementById("objetos-data").textContent);
+
+    const map = L.map("map").setView([-33.45, -70.66], 5);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const cardsDiv = document.getElementById("cards");
+
+    function mostrarCard(obj) {
+        cardsDiv.innerHTML = `
+            <div class="card">
+                ${obj.imagen_url ? `<img src="${obj.imagen_url}" alt="${obj.nombre}" class="card-img">` : ""}
+                <h3>${obj.nombre}</h3>
+                <p>${obj.descripcion}</p>
+                <p><strong>Publicado por:</strong> ${obj['usuario__username']}</p>
+                ${obj.latitud && obj.longitud ? `<p><strong>Ubicación:</strong> (${obj.latitud}, ${obj.longitud})</p>` : ""}
+            </div>
+        `;
+    }
+
+    function limpiarCard() { cardsDiv.innerHTML = ""; }
+
+    let bounds = [];
+
+    objetos.forEach(function(obj) {
+        const lat = parseFloat(obj.latitud);
+        const lng = parseFloat(obj.longitud);
+
+        if(!isNaN(lat) && !isNaN(lng)) {
+
+            const marker = L.marker([lat, lng]).addTo(map);
+
+            marker.bindPopup(`
+                ${obj.imagen_url ? `<img src="${obj.imagen_url}" alt="${obj.nombre}" style="width:120px;height:auto;margin-bottom:5px;">` : ""}
+                <strong>${obj.nombre}</strong><br>
+                ${obj.descripcion}<br>
+                <small>Publicado por: ${obj['usuario__username']}</small><br>
+                ${obj.id ? `<a href="/inicio_sesion/detalle_objeto/${obj.id}/">Ver más</a>` : ""}
+            `);
+
+            marker.on("mouseover", () => mostrarCard(obj));
+            marker.on("mouseout", limpiarCard);
+
+            bounds.push([lat, lng]);
+        }
+    });
+
+    if(bounds.length) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+});
+</script>
 
 {% else %}
-  <p>Debes iniciar sesión para ver el mapa.</p>
-  <a href="{% url 'inicio_sesion:login' %}">Iniciar sesión</a>
+<p>Debes iniciar sesión para ver el mapa.</p>
+<a href="{% url 'inicio_sesion:login' %}">Iniciar sesión</a>
 {% endif %}
 {% endblock %}
-
-
-
-
-

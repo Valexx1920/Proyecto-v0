@@ -5,23 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {% load static %}
 
-  <!-- CSS de Leaflet (mapa) -->
+  <title>ReEstrena</title>
+
+  <!-- CSS de Leaflet desde CDN -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Tu CSS -->
+  <!-- CSS de tu proyecto -->
   <link rel="stylesheet" href="{% static 'PI/css/styles.css' %}">
 </head>
 <body>
 <header>
-  <h1>ReEstrena:</h1>
+  <h1>ReEstrena</h1>
 </header>
 
-
+<main>
   {% block content %}{% endblock %}
+</main>
 
-  <!-- JS de Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Tu JS -->
-  <script src="{% static 'PI/js/app.js' %}"></script>
+<!-- JS de Leaflet desde CDN -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- JS de tu proyecto -->
+<script src="{% static 'PI/js/app.js' %}"></script>
+
 </body>
 </html>

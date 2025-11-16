@@ -11,6 +11,7 @@ class Objeto(models.Model):
     latitud = models.FloatField(null=True, blank=True)
     longitud = models.FloatField(null=True, blank=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
+    imagen = models.ImageField(upload_to='objetos/', null=True, blank=True)
 
     def __str__(self):
         return self.nombre

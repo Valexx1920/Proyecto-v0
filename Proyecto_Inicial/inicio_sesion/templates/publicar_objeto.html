@@ -3,10 +3,54 @@
 {% block content %}
 <h2>Publicar prenda</h2>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">  <!-- <- multipart necesario para imágenes -->
     {% csrf_token %}
     {{ form.as_p }}
+
+    <!-- Mapa -->
+    <div id="map-publicar" style="height: 400px; margin-bottom: 10px; border-radius: 8px;"></div>
+
     <button type="submit" class="btn-verde">Publicar</button>
 </form>
 
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const startLat = -33.45;
+    const startLng = -70.66;
+
+    const latInput = document.getElementById("id_latitud");
+    const lngInput = document.getElementById("id_longitud");
+
+    let initialLat = latInput.value ? parseFloat(latInput.value) : startLat;
+    let initialLng = lngInput.value ? parseFloat(lngInput.value) : startLng;
+
+    const map = L.map("map-publicar").setView([initialLat, initialLng], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    let marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
+
+    function actualizarInputs(pos) {
+        latInput.value = pos.lat.toFixed(6);
+        lngInput.value = pos.lng.toFixed(6);
+    }
+
+    actualizarInputs({lat: initialLat, lng: initialLng});
+
+    marker.on("dragend", function(e) {
+        actualizarInputs(e.target.getLatLng());
+    });
+
+    map.on("click", function(e) {
+        marker.setLatLng([e.latlng.lat, e.latlng.lng]);
+        actualizarInputs(e.latlng);
+    });
+});
+</script>
 {% endblock %}

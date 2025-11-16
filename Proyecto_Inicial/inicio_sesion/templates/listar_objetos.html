@@ -4,13 +4,34 @@
 <h2>Objetos publicados</h2>
 
 {% if objetos %}
+  <!-- JSON para JS -->
+  <script id="objetos-data" type="application/json">
+  [
+  {% for obj in objetos %}
+      {
+          "id": {{ obj.id }},
+          "nombre": "{{ obj.nombre|escapejs }}",
+          "descripcion": "{{ obj.descripcion|escapejs }}",
+          "latitud": {{ obj.latitud|default:"null" }},
+          "longitud": {{ obj.longitud|default:"null" }},
+          "usuario__username": "{{ obj.usuario.username|escapejs }}",
+          "imagen_url": {% if obj.imagen %}"{{ obj.imagen.url }}"{% else %} null {% endif %}
+      }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+  ]
+  </script>
+
   <div id="lista-objetos">
     {% for obj in objetos %}
-      <div class="card">
+      <div class="card" data-id="{{ obj.id }}">
+        {% if obj.imagen %}
+          <img src="{{ obj.imagen.url }}" alt="{{ obj.nombre }}" style="max-width:200px; border-radius:4px; margin-top:10px;">
+        {% endif %}
         <h3>{{ obj.nombre }}</h3>
         <p>{{ obj.descripcion }}</p>
         <p><strong>Publicado por:</strong> {{ obj.usuario.username }}</p>
         <p><strong>Fecha:</strong> {{ obj.fecha_publicacion|date:"d/m/Y H:i" }}</p>
+
         {% if obj.latitud and obj.longitud %}
           <p><strong>Ubicación:</strong> ({{ obj.latitud }}, {{ obj.longitud }})</p>
         {% endif %}
@@ -18,7 +39,6 @@
         {% if obj.usuario == user %}
           <div class="acciones">
             <a href="{% url 'inicio_sesion:editar_objeto' obj.id %}" class="btn btn-azul">Editar</a>
-
             <form action="{% url 'inicio_sesion:eliminar_objeto' obj.id %}" method="post" style="display:inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-rojo">Eliminar</button>
@@ -31,7 +51,6 @@
 {% else %}
   <p>No hay objetos publicados aún.</p>
 {% endif %}
-
 
 <style>
   .card {
@@ -77,22 +96,10 @@
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
   }
 
-  .btn-azul {
-    background-color: #007BFF;
-  }
-
-  .btn-azul:hover {
-    background-color: #0056b3;
-  }
-
-  .btn-rojo {
-    background-color: #dc3545;
-  }
-
-  .btn-rojo:hover {
-    background-color: #b52a37;
-  }
+  .btn-azul { background-color: #007BFF; }
+  .btn-azul:hover { background-color: #0056b3; }
+  .btn-rojo { background-color: #dc3545; }
+  .btn-rojo:hover { background-color: #b52a37; }
 </style>
-
 
 {% endblock %}

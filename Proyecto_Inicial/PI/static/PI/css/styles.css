@@ -93,3 +93,91 @@ button:hover { background: #1e40af; }
   .map-box { height: 55vh; }
 }
 
+/* --- DETALLE DE OBJETO --- */
+
+.detalle-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.detalle-card {
+    width: 90%;
+    max-width: 900px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.detalle-img {
+    flex: 1 1 350px;
+    max-height: 450px;
+    overflow: hidden;
+}
+
+.detalle-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detalle-info {
+    flex: 1 1 350px;
+    padding: 25px;
+}
+
+.detalle-titulo {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.detalle-descripcion {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.detalle-meta {
+    color: #444;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.detalle-botones {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+/* Botones detalle */
+.btn-volver {
+    background: #555;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.btn-volver:hover { background: #333; }
+
+.btn-editar {
+    background: #2b8bf2;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.btn-editar:hover { background: #176dc1; }
+
+.btn-eliminar {
+    background: #d9534f;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.btn-eliminar:hover { background: #b7322d; }
