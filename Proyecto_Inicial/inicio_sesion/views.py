@@ -10,6 +10,13 @@ from django.core.serializers import serialize
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from .models import Objeto
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Objeto
+
+
+
 
 def registro(request):
     if request.method == "POST":
@@ -173,3 +180,36 @@ def guardar_ubicacion(request, pk):
 def detalle_objeto(request, pk):
     objeto = get_object_or_404(Objeto, pk=pk)
     return render(request, "inicio_sesion/detalle_objeto.html", {"objeto": objeto})
+@login_required
+def listo(request, objeto_id):
+    objeto = get_object_or_404(Objeto, id=objeto_id)
+    puntos = puntaje(objeto.gramos)
+
+    return render(request, "listo.html", {
+        "objeto": objeto,
+        "puntos": puntos
+    })
+def puntaje(gramos):
+    if gramos <= 0:
+        puntos = (gramos * 25 * 2) + (gramos * 10000 / 50) + (gramos * 100)
+    else:
+      
+        puntos = (gramos * 25 * 2) + (gramos * 10000 / 50) + (gramos * 100)
+    return puntos
+
+
+@login_required
+def aceptar_tradeo(request, objeto_id):
+    objeto = get_object_or_404(Objeto, id=objeto_id)
+
+    
+    puntos = puntaje(objeto.gramos)
+
+
+    objeto.puntaje = puntos
+    objeto.save()
+
+    return render(request, "Listo.html", {
+        "objeto": objeto,
+        "puntos": puntos
+    })

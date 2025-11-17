@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',"PI","inicio_sesion",
-    'channels',
+    'channels',"Perfil",
 ]
 
 ROOT_URLCONF = 'Proyecto_Inicial.urls'

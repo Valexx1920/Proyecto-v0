@@ -1,7 +1,4 @@
 from django.db import models
-
-# Create your models here.
-
 from django.contrib.auth.models import User
 
 class Objeto(models.Model):
@@ -12,6 +9,10 @@ class Objeto(models.Model):
     longitud = models.FloatField(null=True, blank=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     imagen = models.ImageField(upload_to='objetos/', null=True, blank=True)
+    
+    # NUEVO CAMPO
+    gramos = models.FloatField(null=True, blank=True, default=0)
+    puntaje = models.FloatField(default=0)
 
     def __str__(self):
         return self.nombre

@@ -1,41 +1,123 @@
 {% extends 'PI/base.html' %}
 
 {% block content %}
-<div class="detalle-container">
+<style>
+    /* Contenedor principal */
+    .detalle-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem;
+        font-family: 'Arial', sans-serif;
+    }
 
+    /* Tarjeta */
+    .detalle-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s;
+    }
+    .detalle-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Imagen */
+    .detalle-img img {
+        width: 100%;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* Información */
+    .detalle-info {
+        padding: 1.5rem;
+    }
+
+    .detalle-titulo {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .detalle-descripcion {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: #555;
+    }
+
+    .detalle-meta {
+        font-size: 0.95rem;
+        color: #777;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Botones */
+    .detalle-botones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .detalle-botones a {
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-volver { background: #6c757d; color: white; }
+    .btn-volver:hover { background: #5a6268; transform: scale(1.05); }
+
+    .btn-editar { background: #ffc107; color: white; }
+    .btn-editar:hover { background: #e0a800; transform: scale(1.05); }
+
+    .btn-eliminar { background: #dc3545; color: white; }
+    .btn-eliminar:hover { background: #c82333; transform: scale(1.05); }
+
+    .btn-aceptar {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        color: white;
+        font-size: 1.1rem;
+        padding: 0.75rem 1.5rem;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    }
+    .btn-aceptar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    }
+</style>
+
+<div class="detalle-container">
     <div class="detalle-card">
-        
-        <!-- Imagen grande -->
         {% if objeto.imagen %}
         <div class="detalle-img">
             <img src="{{ objeto.imagen.url }}" alt="{{ objeto.nombre }}">
         </div>
         {% endif %}
 
-        <!-- Contenido de la tarjeta -->
         <div class="detalle-info">
             <h1 class="detalle-titulo">{{ objeto.nombre }}</h1>
-
             <p class="detalle-descripcion">{{ objeto.descripcion }}</p>
 
-            <p class="detalle-meta">
-                <strong>Publicado por:</strong> {{ objeto.usuario.username }}
-            </p>
+            <p class="detalle-meta"><strong>Publicado por:</strong> {{ objeto.usuario.username }}</p>
 
             {% if objeto.latitud and objeto.longitud %}
-            <p class="detalle-meta">
-                <strong>Ubicación aproximada:</strong> ({{ objeto.latitud }}, {{ objeto.longitud }})
-            </p>
+            <p class="detalle-meta"><strong>Ubicación aproximada:</strong> ({{ objeto.latitud }}, {{ objeto.longitud }})</p>
             {% endif %}
 
-            <!-- Botones (más adelante agregaré permisos para ocultarlos si no corresponde) -->
             <div class="detalle-botones">
                 <a href="/home/" class="btn-volver">← Volver</a>
                 <a href="{% url 'inicio_sesion:editar_objeto' objeto.id %}" class="btn-editar">Editar</a>
                 <a href="{% url 'inicio_sesion:eliminar_objeto' objeto.id %}" class="btn-eliminar">Eliminar</a>
+                <a href="{% url 'inicio_sesion:aceptar_tradeo' objeto.id %}" class="btn-aceptar">🌱 Aceptar Tradeo</a>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

@@ -15,6 +15,8 @@ urlpatterns = [
     path("eliminar/<int:pk>/", views.eliminar_objeto, name="eliminar_objeto"),
     path('guardar_ubicacion/<int:pk>/', views.guardar_ubicacion, name='guardar_ubicacion'),
     path('detalle_objeto/<int:pk>/', views.detalle_objeto, name='detalle_objeto'),
+  
+    path('objeto/<int:objeto_id>/aceptar/', views.aceptar_tradeo, name='aceptar_tradeo'),
 
 ]
     

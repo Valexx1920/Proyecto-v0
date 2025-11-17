@@ -3,32 +3,39 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-<p>Bienvenido, {{ user.username }}</p>
+<div class="welcome-section">
+    <p>Bienvenido, <strong>{{ user.username }}</strong></p>
 
-<div style="text-align: right; margin-bottom: 10px;">
-    <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">Publicar prenda</a>
-    <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">Ver objetos publicados</a>
+    <div class="action-buttons">
+        <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">Publicar prenda</a>
+        <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">Ver objetos publicados</a>
 
-    <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn-rojo">Cerrar sesión</button>
-    </form>
+        
+        </form>
+    </div>
 </div>
 
 <!-- Mapa -->
-<div id="map" style="height: 500px; border-radius: 8px;"></div>
+<div id="map" class="map-container"></div>
 
 <!-- Panel de info al pasar el mouse -->
-<div id="cards" style="margin-top: 15px;"></div>
+<div id="cards" class="cards-container"></div>
 
 <!-- JSON de objetos para JS -->
 {{ objetos|json_script:"objetos-data" }}
 
+{% else %}
+<p>Debes iniciar sesión para ver el mapa.</p>
+<a href="{% url 'inicio_sesion:login' %}" class="btn-azul">Iniciar sesión</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-
     const objetos = JSON.parse(document.getElementById("objetos-data").textContent);
 
+    // Inicialización del mapa
     const map = L.map("map").setView([-33.45, -70.66], 5);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -58,8 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const lat = parseFloat(obj.latitud);
         const lng = parseFloat(obj.longitud);
 
-        if(!isNaN(lat) && !isNaN(lng)) {
-
+        if (!isNaN(lat) && !isNaN(lng)) {
             const marker = L.marker([lat, lng]).addTo(map);
 
             marker.bindPopup(`
@@ -82,9 +88,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
-
-{% else %}
-<p>Debes iniciar sesión para ver el mapa.</p>
-<a href="{% url 'inicio_sesion:login' %}">Iniciar sesión</a>
-{% endif %}
 {% endblock %}
