@@ -1,35 +1,57 @@
 {% extends 'PI/base.html' %}
 
 {% block content %}
+
 {% if user.is_authenticated %}
 
-  <p> Bienvenido, {{ user.username }}</p>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 style="font-weight:600; font-size:24px; margin:0;">
+          Bienvenido, {{ user.username }} 👋
+      </h2>
 
-  <div style="text-align: right; margin-bottom: 10px;">
-      <!-- Botón Publicar -->
-      <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">Publicar prenda</a>
+      <div style="display:flex; gap:10px;">
+          
+          <!-- Botón Publicar -->
+          <a href="{% url 'inicio_sesion:publicar_objeto' %}" class="btn-verde">
+              Publicar prenda
+          </a>
 
-      <!-- Botón Ver Objetos -->
-      <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">Ver objetos publicados</a>
-      
-      <!-- Botón Cerrar sesión -->
-      <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn-rojo">Cerrar sesión</button>
-      </form>
+          <!-- Botón Ver Objetos -->
+          <a href="{% url 'inicio_sesion:listar_objetos' %}" class="btn-azul">
+              Ver objetos publicados
+          </a>
+          
+          <!-- Botón Cerrar sesión -->
+          <form action="{% url 'inicio_sesion:logout_usuario' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn-rojo">Cerrar sesión</button>
+          </form>
+      </div>
   </div>
 
-
-
   <!-- Contenedor del mapa -->
-  <div id="map" style="height: 400px;"></div>
-  <div id="cards"></div>
+  <div id="map"
+      style="height: 450px; border-radius: 14px; box-shadow: 0 3px 15px rgba(0,0,0,0.15); margin-bottom: 25px;">
+  </div>
+
+  <!-- Contenedor dinámico de tarjetas -->
+  <div id="cards"
+       style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+  </div>
 
 {% else %}
-  <p>Debes iniciar sesión para ver el mapa.</p>
-  <a href="{% url 'inicio_sesion:login' %}">Iniciar sesión</a>
+
+  <div style="text-align:center; padding:40px;">
+      <h2 style="font-size:24px; font-weight:600;">Debes iniciar sesión para ver esta página.</h2>
+      <a href="{% url 'inicio_sesion:login' %}" class="btn-azul" style="margin-top:20px; display:inline-block;">
+          Iniciar sesión
+      </a>
+  </div>
+
 {% endif %}
+
 {% endblock %}
+
 
 
 

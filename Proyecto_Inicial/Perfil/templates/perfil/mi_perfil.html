@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi perfil</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f0f0;
+            padding: 30px;
+        }
+        .contenedor {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ddd;
+            display: block;
+            margin: 10px auto;
+        }
+        h2 {
+            text-align: center;
+        }
+        .dato {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h2>Mi Perfil</h2>
+
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" class="avatar">
+    {% else %}
+        <img src="/static/default_avatar.png" class="avatar">
+    {% endif %}
+
+    <div class="dato"><b>Usuario:</b> {{ profile.user.username }}</div>
+    <div class="dato"><b>Email:</b> {{ profile.user.email }}</div>
+    <div class="dato"><b>Biografía:</b> {{ profile.bio }}</div>
+
+</div>
+
+</body>
+</html>

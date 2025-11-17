@@ -5,23 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {% load static %}
 
-  <!-- CSS de Leaflet (mapa) -->
+  <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Tu CSS -->
+  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="{% static 'PI/css/styles.css' %}">
+
+  <style>
+      body {
+          background: #f5f7fa;
+          margin: 0;
+          font-family: 'Segoe UI', sans-serif;
+      }
+
+      header {
+          background: #2b7a78;
+          padding: 15px;
+          color: white;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .contenedor {
+          width: 90%;
+          max-width: 1100px;
+          margin: auto;
+          padding: 20px 0;
+      }
+
+      .btn-verde, .btn-azul, .btn-rojo {
+          padding: 8px 15px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: 600;
+          margin-left: 6px;
+      }
+
+      .btn-verde { background: #3cb371; color: white; }
+      .btn-azul  { background: #4682b4; color: white; }
+      .btn-rojo  { background: #e74c3c; color: white; border: none; cursor: pointer; }
+
+      .btn-rojo:hover   { background: #c0392b; }
+      .btn-verde:hover  { background: #2e8b57; }
+      .btn-azul:hover   { background: #4169a3; }
+
+      #map {
+          height: 450px;
+          border-radius: 12px;
+          box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+          margin-top: 20px;
+      }
+
+      #cards {
+          margin-top: 20px;
+      }
+  </style>
+
 </head>
+
 <body>
+
 <header>
-  <h1>ReEstrena:</h1>
+  <h1>ReEstrena</h1>
 </header>
 
-
+<div class="contenedor">
   {% block content %}{% endblock %}
+</div>
 
-  <!-- JS de Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Tu JS -->
-  <script src="{% static 'PI/js/app.js' %}"></script>
+<!-- JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'PI/js/app.js' %}"></script>
+
 </body>
 </html>

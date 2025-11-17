@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from Perfil.models import Profile
+
 def registro(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -15,21 +17,23 @@ def registro(request):
             messages.error(request, "Las contraseñas no coinciden")
             return redirect('inicio_sesion:registro')
 
-
         if User.objects.filter(username=username).exists():
             messages.error(request, "El usuario ya existe")
             return redirect('inicio_sesion:registro')
-
 
         if User.objects.filter(email=email).exists():
             messages.error(request, "Este correo ya está registrado")
             return redirect('inicio_sesion:registro')
 
-       
+        
         user = User.objects.create_user(username=username, password=password, email=email)
-        user.save()
+
+       
+        Profile.objects.create(user=user)
+
         messages.success(request, "Usuario registrado correctamente")
         return redirect('inicio_sesion:login')
+
 
     return render(request, 'registro.html')
 

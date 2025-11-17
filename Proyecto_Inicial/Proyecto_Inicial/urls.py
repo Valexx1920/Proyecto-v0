@@ -21,6 +21,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('inicio_sesion.urls')),
     path('home/', include('PI.urls')),
+  
+    path("perfil/", include("Perfil.urls")),
+    
+    
+
 ]
 
 
